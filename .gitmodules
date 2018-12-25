@@ -1,0 +1,9 @@
+[submodule "VanillaVotifier"]
+	path = VanillaVotifier
+	url = https://github.com/TemplexMC/VanillaVotifier.git
+[submodule "GameWrapperBot"]
+	path = GameWrapperBot
+	url = https://github.com/TemplexMC/GameWrapperBot.git
+[submodule "docker-crontab"]
+	path = docker-crontab
+	url = https://github.com/willfarrell/docker-crontab.git

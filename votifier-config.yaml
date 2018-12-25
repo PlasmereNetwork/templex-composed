@@ -1,0 +1,57 @@
+# The config version. Used internally by VanillaVotifier. Please don't touch!
+config-version: 4
+
+# The relative path to the directory in which to save the log files.
+# If the directory doesn't exist, it will be created.
+log-directory: 'logs'
+
+# The IP address and port of the VanillaVotifier server.
+server:
+  ip: '0.0.0.0'
+  port: 5723
+
+# The relative path to the public and private key files.
+# If both files don't exist, a new 2048-bit key pair will be generated.
+key-pair-files:
+  public: 'public.pem'
+  private: 'private.pem'
+
+# A list of actions to perform as soon as somebody votes for your server.
+on-vote:
+  # Sends one or more commands to a Minecraft RCon server.
+  - action: 'rcon'
+    # The IP address, port, and password of the RCon server.
+    # Using a local IP address should be preferred, since the RCon protocol requires passwords to be sent as plaintext.
+    server:
+      ip: 'minecraft-server'
+      port: 25575
+      password: 'firewalled'
+
+    # The commands to send to the RCon server.
+    # "${service-name}" will be replaced with the service the player has voted on (for example MCSL).
+    # "${user-name}" will be replaced with the IGN of the player.
+    # "${address}" will be replaced with the player's IP address.
+    # "${timestamp}" will be replaced with the time stamp in which the player has voted. Format may vary depending on voting service.
+    #
+    # It is not recommended to use commands such as "/give", "/effect", etc., since they wouldn't work if the player is offline.
+    # Instead, set a certain score (using the "/scoreboard players set <player> <objective> <score> [dataTag]" command) and handle rewarding through an ingame Command Block clock which is always loaded.
+    commands:
+      - 'tellraw @a[tag=!SO] [{"text":"\u00A7c${user-name} \u00A7djust voted and got \u00A761 \u00A7cVote Credit \u00A7dand now is one vote closer to their next \u00A7crank\u00A78! \u00A7dWould you like to vote\u00A78? ","color":"light_purple"},{"text":"\u00A7e[\u00A74Click \u00A74here\u00A7e]","hoverEvent":{"action":"show_text","value":"\u00A77Click here to go to our website and vote!"},"clickEvent":{"action":"open_url","value":"https://templex.co/vote"}}]'
+      - 'scoreboard players add Votes Stats 1'
+      - 'scoreboard players add ${user-name} GetVoted 1'
+      - 'scoreboard players add ${user-name} Votes 1'
+      - 'w @a[tag=OP] ${user-name} voted at ${timestamp} with the IP of ${address} on ${service-name}'
+      - 'scoreboard players add VP Database 1'
+      - 'scoreboard players set VPM Database 50'
+      - 'tellraw @a[tag=!SO] [{"text":"\u00A76VoteParty \u00A78: \u00A7bWe now have "},{"score":{"name":"VP","objective":"Database"},"color":"gold"},{"text":"\u00A78/\u00A7650 \u00A7bvotes until Vote Party!","color":"aqua"}]'
+      - 'scoreboard players add ${user-name} CurrVotes 1'
+
+    regex-replace: {}
+
+  # Executes one or more programs/commands.
+  # The following environment variables will be set: "voteServiceName" to ${service-name}, "voteUserName" to ${user-name}, "voteAddress" to ${address}, "voteTimestamp" to ${timestamp}.
+  - action: 'shell'
+    commands:
+    #      - 'test -x onvote.sh && ./onvote.sh' # "CMD /C IF EXIST onvote.bat onvote.bat" on Windows.
+
+    regex-replace: {}

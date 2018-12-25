@@ -1,0 +1,11 @@
+/*
+!.gitmodules
+!.gitignore
+!README.md
+!Makefile
+!docker-compose.yml
+!minecraft.env
+!votifier-config.yaml
+!VanillaVotifier
+!GameWrapperBot
+!docker-crontab
