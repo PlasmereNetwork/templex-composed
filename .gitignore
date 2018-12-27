@@ -7,5 +7,6 @@
 !minecraft.env
 !votifier-config.yaml
 !VanillaVotifier
-!GameWrapperBot
+!DiscordRelay
 !docker-crontab
+!templex-dockerized

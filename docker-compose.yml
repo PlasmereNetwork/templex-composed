@@ -1,17 +1,38 @@
 version: "3.7"
 services:
+  discord-relay:
+    image: vanilla-partnership/discord-relay
+    restart: always
+    volumes:
+      - ./discord-relay.properties:/usr/relay/discord-relay.properties
+    init: true
+    container_name: discord-relay
+    ports:
+      - 601
+    networks:
+      relay:
+        aliases:
+          - discord-relay
+
   minecraft-server:
-    image: templexmc/game-wrapper-bot
+    image: templexmc/minecraft-server
     restart: always
     volumes:
       - data:/data
-      - ./oklahomabot.properties:/data/oklahomabot.properties
     ports:
       - 25565:25565
       - 25575
     env_file: minecraft.env
     init: true
     container_name: templex-server
+    depends_on:
+      - discord-relay
+    links:
+      - discord-relay
+    networks:
+      relay:
+        aliases:
+          - minecraft-server
 
   vanilla-votifier:
     image: templexmc/vanilla-votifier
@@ -30,3 +51,6 @@ services:
 
 volumes:
   data: {}
+
+networks:
+  relay:

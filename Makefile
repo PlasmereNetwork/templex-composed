@@ -1,10 +1,12 @@
 build:
 	$(MAKE) -C VanillaVotifier build
-	$(MAKE) -C GameWrapperBot build
+	$(MAKE) -C templex-dockerized build
+	$(MAKE) -C DiscordRelay build
 
 clean:
 	$(MAKE) -C VanillaVotifier clean
-	$(MAKE) -C GameWrapperBot clean
+	$(MAKE) -C templex-dockerized clean
+	$(MAKE) -C DiscordRelay clean
 
 run: stop
 	docker-compose up -d
